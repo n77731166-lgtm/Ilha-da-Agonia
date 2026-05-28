@@ -199,15 +199,15 @@ const notes=[
 // Armários de esconderijo - com posição e estado visual
 const wardrobes = [
     {x:17, y:19, open:false, label:'Armário Empoeirado'},
-    {x:22, y:19, open:false, label:'Armário de Carvalho'},
+    {x:21, y:19, open:false, label:'Armário de Carvalho'},
     {x:61, y:19, open:false, label:'Armário Metálico'},
-    {x:67, y:19, open:false, label:'Armário Enferrujado'},
+    {x:66, y:19, open:false, label:'Armário Enferrujado'},
     {x:16, y:43, open:false, label:'Guarda-roupa'},
-    {x:22, y:43, open:false, label:'Armário Podre'},
+    {x:21, y:43, open:false, label:'Armário Podre'},
     {x:61, y:43, open:false, label:'Armário de Ferro'},
-    {x:67, y:43, open:false, label:'Armário Escuro'},
+    {x:66, y:43, open:false, label:'Armário Escuro'},
     {x:39, y:13, open:false, label:'Roupeiro'},
-    {x:43, y:13, open:false, label:'Armário de Aço'},
+    {x:42, y:13, open:false, label:'Armário de Aço'},
 ];
 
 
