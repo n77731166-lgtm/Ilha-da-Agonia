@@ -211,7 +211,7 @@ const wardrobes = [
 ];
 
 
-let px=40*T+16,py=53*T+16,pdir=0,pstam=100,prun=false,phide=false, pmoving=false;
+let px=40*T+16,py=53*T+16,pdir=0,pstam=100,prun=false,phide=false, pmoving=false, hideCD=0;
 let vx=40*T+16,vy=20*T+16,vdir=0,vstate='patrol',vpi=0,vsearchT=0,vlkx=0,vlky=0,vDashT=0;
 const vpath=[{x:40,y:25},{x:25,y:25},{x:25,y:15},{x:50,y:15},{x:60,y:25},{x:60,y:40},{x:40,y:40}];
 let camX=0,camY=0;
@@ -269,13 +269,16 @@ function updatePlayer(dt){
   }
 
 
+  // Cooldown após sair do esconderijo (evita re-entrar imediatamente)
+  if(hideCD > 0) hideCD--;
+
   // Permitir sair do esconderijo mesmo estando escondido
   if(phide) {
     if(keys['KeyE'] && !keys._e) {
       keys._e = true;
       const hiddenIn = wardrobes.find(w=>w.open);
       if(hiddenIn) hiddenIn.open = false;
-      phide = false; msg = 'Você saiu do esconderijo.'; msgT = 90;
+      phide = false; hideCD = 30; msg = 'Você saiu do esconderijo.'; msgT = 90;
       playTone(150, 'sine', 0.1, 0.05);
     }
     if(!keys['KeyE']) keys._e = false;
@@ -309,20 +312,15 @@ function updatePlayer(dt){
             playTone(300, 'sine', 0.2, 0.1);
         }
     });
-    // Armários: entrar/sair
+    // Armários: entrar (apenas se não estiver em cooldown)
     const nearWardrobe = wardrobes.find(w => dist(px,py,w.x*T+16,w.y*T+16)<40);
-    if(!phide && nearWardrobe) {
+    if(!phide && nearWardrobe && hideCD <= 0) {
         phide = true;
         nearWardrobe.open = true;
         px = nearWardrobe.x*T+16; py = nearWardrobe.y*T+16;
         msg = 'ESCONDIDO no ' + nearWardrobe.label + '. Pressione E para sair.';
         msgT = 180;
         playTone(180, 'sine', 0.15, 0.08);
-    } else if(phide) {
-        const hiddenIn = wardrobes.find(w=>w.open);
-        if(hiddenIn) hiddenIn.open = false;
-        phide = false; msg = 'Você saiu do esconderijo.'; msgT = 90;
-        playTone(150, 'sine', 0.1, 0.05);
     }
     Object.entries(escapes).forEach(([k,e])=>{
       if(dist(px,py,e.x*T+16,e.y*T+16)<48){
@@ -1284,7 +1282,7 @@ function drawVictory(){
 
 
 function resetGame(){
-  px=40*T+16;py=53*T+16;pdir=0;pstam=100;prun=false;phide=false;
+  px=40*T+16;py=53*T+16;pdir=0;pstam=100;prun=false;phide=false;hideCD=0;
   vx=40*T+16;vy=20*T+16;vstate='patrol';vpi=0;vsearchT=0;vDashT=0;
   inventory=[]; items.forEach(i=>i.got=false); msg='';msgT=0; particles=[]; shake=0; loreT=0;
   sysVars = { knowsCode: false, safeOpen: false, genOn: false, altarDone: false, fuseFixed: false, weaponBoxOpen: false };
